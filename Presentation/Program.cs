@@ -1,3 +1,5 @@
+using Application;
+using Infrastructure;
 using Infrastructure.Database;
 using Infrastructure.Database.Entities;
 using Infrastructure.Database.Identity;
@@ -26,11 +28,13 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddIdentity<AppUser, IdentityRole<Guid>>(options => 
         options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<AppDbContext>()
-    .AddRoles<AppUser>()
     .AddApiEndpoints();
 
 builder.Services.AddAuthentication();
-builder.Services.AddAuthorization();  
+builder.Services.AddAuthorization();
+
+builder.Services.AddInfrastructure();
+builder.Services.AddApplication();
 
 var app = builder.Build();
 

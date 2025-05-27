@@ -1,6 +1,8 @@
+using Domain.Interfaces;
+
 namespace Domain.Entities;
 
-public class Authority
+public class Authority : IHasId, IHasTitle
 {
     public Guid Id { get; set; }
     public string Title { get; set; } = string.Empty;

@@ -25,8 +25,8 @@ public static class IdentityConfiguration
         }
         
         var adminUsername = configuration["SuperAdmin:Username"];
-        var adminEmail = configuration["SuperAdminUser:Email"];
-        var adminPassword = configuration["SuperAdminUser:Password"];
+        var adminEmail = configuration["SuperAdmin:Email"];
+        var adminPassword = configuration["SuperAdmin:Password"];
 
         if (adminUsername == null || adminEmail == null || adminPassword == null)
         {

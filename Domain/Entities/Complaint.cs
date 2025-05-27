@@ -1,6 +1,8 @@
+using Domain.Interfaces;
+
 namespace Domain.Entities;
 
-public class Complaint
+public class Complaint : IHasId, IHasTitle
 {
     public Guid Id { get; set; }
     public string Title { get; set; } = string.Empty;
