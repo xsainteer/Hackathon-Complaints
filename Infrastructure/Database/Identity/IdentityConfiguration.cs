@@ -1,6 +1,5 @@
 using Infrastructure.Database.Entities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,6 +21,11 @@ public static class IdentityConfiguration
         if (!roleExists)
         {
             await roleManager.CreateAsync(new IdentityRole<Guid>("SuperAdmin"));
+        }
+        var roleExistsAdmin = await roleManager.RoleExistsAsync("Admin");
+        if (!roleExistsAdmin)
+        {
+            await roleManager.CreateAsync(new IdentityRole<Guid>("Admin")); 
         }
         
         var adminUsername = configuration["SuperAdmin:Username"];

@@ -24,7 +24,7 @@ public class GenericController<T, TCreateDto, TReadDto, TUpdateDto> : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] int skip = 0, [FromQuery] int count = 10, [FromQuery] string query = "")
+    public virtual async Task<IActionResult> GetAll([FromQuery] int skip = 0, [FromQuery] int count = 10, [FromQuery] string query = "")
     {
         try
         {
@@ -40,7 +40,7 @@ public class GenericController<T, TCreateDto, TReadDto, TUpdateDto> : Controller
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(Guid id)
+    public virtual async Task<IActionResult> GetById(Guid id)
     {
         try
         {
