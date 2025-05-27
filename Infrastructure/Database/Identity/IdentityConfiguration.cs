@@ -61,6 +61,7 @@ public static class IdentityConfiguration
             var createAdminResult = await userManager.CreateAsync(newAdmin, adminPassword);
             if (createAdminResult.Succeeded)
             {
+                await userManager.AddToRoleAsync(newAdmin, "SuperAdmin");
                 await userManager.AddToRoleAsync(newAdmin, "Admin");
             }
         }
