@@ -40,7 +40,7 @@ public class SubmissionsController : GenericController<Submission, CreateSubmiss
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            _logger.LogError("Error sending submission email: {Message}", e.Message);
             throw;
         }
     }
@@ -62,7 +62,7 @@ public class SubmissionsController : GenericController<Submission, CreateSubmiss
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            _logger.LogError("Error fetching submissions by authority: {Message}", e.Message);
             throw;
         }
     }
