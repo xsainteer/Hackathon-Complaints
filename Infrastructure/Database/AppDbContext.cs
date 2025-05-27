@@ -1,4 +1,6 @@
-using Infrastructure.PostgreSQL.Entities;
+using Domain.Entities;
+using Infrastructure.Database.Configurations;
+using Infrastructure.Database.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -14,5 +16,15 @@ public class AppDbContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>
     {
     }
     
-    
+    public DbSet<Complaint> Complaints { get; set; }
+    public DbSet<Authority> Authorities { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        builder.ApplyConfiguration(new ComplaintConfiguration());
+        builder.ApplyConfiguration(new AuthorityConfiguration());
+        builder.ApplyConfiguration(new AppUserConfiguration());
+        
+        base.OnModelCreating(builder);
+    }
 }

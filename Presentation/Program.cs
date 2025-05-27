@@ -1,6 +1,6 @@
 using Infrastructure.Database;
-using Infrastructure.PostgreSQL;
-using Infrastructure.PostgreSQL.Entities;
+using Infrastructure.Database.Entities;
+using Infrastructure.Database.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -23,14 +23,22 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-builder.Services.AddIdentity<AppUser, IdentityRole<Guid>>()
+builder.Services.AddIdentity<AppUser, IdentityRole<Guid>>(options => 
+        options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<AppDbContext>()
+    .AddRoles<AppUser>()
     .AddApiEndpoints();
 
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();  
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await services.CreateRoles();
+}
 
 app.UseRouting();
 
@@ -41,7 +49,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "My API v1");
-        options.RoutePrefix = "swagger";
+        options.RoutePrefix = string.Empty;
     });
 }
 
