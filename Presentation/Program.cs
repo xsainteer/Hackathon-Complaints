@@ -1,0 +1,55 @@
+using Infrastructure.Database;
+using Infrastructure.PostgreSQL;
+using Infrastructure.PostgreSQL.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddControllers();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "My API",
+        Version = "v1",
+        Description = "API Documentation for My Project"
+    });
+});
+
+builder.Services.AddIdentity<AppUser, IdentityRole<Guid>>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddApiEndpoints();
+
+builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();  
+
+var app = builder.Build();
+
+app.UseRouting();
+
+//Swagger
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "My API v1");
+        options.RoutePrefix = "swagger";
+    });
+}
+
+// for the time being
+app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+app.MapControllers();
+
+app.MapIdentityApi<AppUser>();
+
+app.Run();

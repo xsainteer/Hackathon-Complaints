@@ -1,0 +1,93 @@
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+# .NET
+bin/
+obj/
+out/
+
+# User-specific files
+.vs/
+.vscode/
+.idea/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows Installer files for VS2019 and newer
+.vs2019/
+.vs2017/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# User-specific files for Rider IDE
+.idea/
+
+# JetBrains Rider config folder
+.idea/.idea
+
+# Rider lock file
+.idea/Library/LockFile
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+
+# .NET 5 and above SDK
+*.user
+*.userosscache
+*.suo
+*.userprefs
+
+# Npm files
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Publish files
+publish/
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Dd]Release/
+[Dd]eploy/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# JetBrains Rider
+.idea/
+
+# Logs
+*.log
+
+# VS Code
+.vscode/
+
+# DotCover
+.idea/dotCover/
+
+# macOS
+.DS_Store
+
+# Windows Installer
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Xamarin Studio
+.idea/
+
+# JetBrains Rider
+.idea/
