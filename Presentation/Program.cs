@@ -3,6 +3,7 @@ using Infrastructure;
 using Infrastructure.Database;
 using Infrastructure.Database.Entities;
 using Infrastructure.Database.Identity;
+using Infrastructure.Email;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -36,9 +37,7 @@ builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
 
-
-
-builder.Services.AddInfrastructure();
+builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 
 var app = builder.Build();
