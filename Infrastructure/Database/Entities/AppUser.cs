@@ -5,6 +5,6 @@ namespace Infrastructure.Database.Entities;
 
 public class AppUser : IdentityUser<Guid>
 {
-    public List<Complaint> Complaints { get; set; } = [];
+    public List<Submission> Complaints { get; set; } = [];
     
 }

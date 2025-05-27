@@ -16,7 +16,7 @@ public class AppDbContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>
     {
     }
     
-    public DbSet<Complaint> Complaints { get; set; }
+    public DbSet<Submission> Submissions { get; set; }
     public DbSet<Authority> Authorities { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)

@@ -6,6 +6,7 @@ using Infrastructure.Database.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Presentation.Mappers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole<Guid>>(options =>
 
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
+builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
 
 builder.Services.AddInfrastructure();
 builder.Services.AddApplication();

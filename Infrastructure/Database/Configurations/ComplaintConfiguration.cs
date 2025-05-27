@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Database.Configurations;
 
-public class ComplaintConfiguration : IEntityTypeConfiguration<Complaint>
+public class ComplaintConfiguration : IEntityTypeConfiguration<Submission>
 {
-    public void Configure(EntityTypeBuilder<Complaint> builder)
+    public void Configure(EntityTypeBuilder<Submission> builder)
     {
         builder.HasOne<Authority>(c => c.Authority)
-            .WithMany(a => a.Complaints)
+            .WithMany(a => a.Submissions)
             .HasForeignKey(c => c.AuthorityId);
         
         builder.HasOne<AppUser>()
