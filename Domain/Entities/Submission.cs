@@ -1,4 +1,5 @@
 using Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Entities;
 
@@ -24,6 +25,8 @@ public class Submission : IHasId, IHasTitle
     public Guid AuthorityId { get; set; }
 
     public SubmissionStatus Status { get; set; } = SubmissionStatus.New;
+    
+    public GeoPoint? Location { get; set; }
 } 
 
 public enum SubmissionStatus
@@ -32,4 +35,21 @@ public enum SubmissionStatus
     InProgress,
     Resolved,
     Rejected
+}
+
+[Owned]
+public class GeoPoint
+{
+    public double Latitude { get; set; }
+    public double Longitude { get; set; }
+
+    public GeoPoint() { }
+    
+    public GeoPoint(double latitude, double longitude)
+    {
+        Latitude = latitude;
+        Longitude = longitude;
+    }
+
+    public override string ToString() => $"({Latitude}, {Longitude})";
 }

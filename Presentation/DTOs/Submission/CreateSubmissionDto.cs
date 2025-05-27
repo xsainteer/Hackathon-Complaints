@@ -9,4 +9,5 @@ public class CreateSubmissionDto
     public Guid CreatorId { get; set; }
     public Guid AuthorityId {get; set; }
     public SubmissionType SubmissionType { get; set; }
+    public GeoPoint? Location { get; set; }
 }

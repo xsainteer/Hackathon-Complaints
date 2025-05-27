@@ -10,4 +10,5 @@ public class UpdateSubmissionDto
     public Guid AuthorityId { get; set; }
     public SubmissionType SubmissionType { get; set; }
     public SubmissionStatus Status { get; set; }
+    public GeoPoint? Location { get; set; }
 }
