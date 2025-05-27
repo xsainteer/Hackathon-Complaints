@@ -4,6 +4,7 @@ using Infrastructure.Database;
 using Infrastructure.Database.Entities;
 using Infrastructure.Database.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Presentation.Mappers;
@@ -34,6 +35,8 @@ builder.Services.AddIdentity<AppUser, IdentityRole<Guid>>(options =>
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
+
+
 
 builder.Services.AddInfrastructure();
 builder.Services.AddApplication();

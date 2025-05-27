@@ -2,6 +2,7 @@ using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Infrastructure.Database;
+using Infrastructure.Email;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Presentation.DTOs.Submission;
@@ -13,9 +14,35 @@ namespace Presentation.Controllers;
 public class SubmissionsController : GenericController<Submission, CreateSubmissionDto, ReadSubmissionDto, UpdateSubmissionDto>
 {
     private readonly AppDbContext _context;
-    public SubmissionsController(IGenericService<Submission> service, ILogger<GenericController<Submission, CreateSubmissionDto, ReadSubmissionDto, UpdateSubmissionDto>> logger, IMapper mapper, AppDbContext context) : base(service, logger, mapper)
+    private readonly EmailService _emailService;
+    public SubmissionsController(IGenericService<Submission> service, ILogger<GenericController<Submission, CreateSubmissionDto, ReadSubmissionDto, UpdateSubmissionDto>> logger, IMapper mapper, AppDbContext context, EmailService emailService) : base(service, logger, mapper)
     {
         _context = context;
+        _emailService = emailService;
+    }
+
+    public override async Task<IActionResult> Add(CreateSubmissionDto createDto)
+    {
+        try
+        {
+            // overriding so when submission submitted its sent to Authority directly
+            var to = await _context
+                .Authorities
+                .FindAsync(createDto.AuthorityId)
+                ?? throw new Exception("Authority not found");
+            
+            await _emailService.SendEmailAsync(
+                to.Email,
+                $"{createDto.SubmissionType.ToString()}, {createDto.Title}",
+                createDto.Description);
+
+            return await base.Add(createDto);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
     [HttpGet("byauthority/{id}")]

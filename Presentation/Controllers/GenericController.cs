@@ -88,7 +88,7 @@ public class GenericController<T, TCreateDto, TReadDto, TUpdateDto> : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Add([FromBody] TCreateDto createDto)
+    public virtual async Task<IActionResult> Add([FromBody] TCreateDto createDto)
     {
         try
         {
