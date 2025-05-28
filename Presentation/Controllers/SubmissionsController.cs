@@ -2,6 +2,8 @@ using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Infrastructure.AI;
+using Infrastructure.AI.Ollama;
+using Infrastructure.AI.Vectors;
 using Infrastructure.Database;
 using Infrastructure.Email;
 using Microsoft.AspNetCore.Mvc;
@@ -17,11 +19,14 @@ public class SubmissionsController : GenericController<Submission, CreateSubmiss
     private readonly AppDbContext _context;
     private readonly EmailService _emailService;
     private readonly OllamaClient _ollamaClient;
-    public SubmissionsController(IGenericService<Submission> service, ILogger<GenericController<Submission, CreateSubmissionDto, ReadSubmissionDto, UpdateSubmissionDto>> logger, IMapper mapper, AppDbContext context, EmailService emailService, OllamaClient ollamaClient) : base(service, logger, mapper)
+    private readonly VectorService _vectorService;
+
+    public SubmissionsController(IGenericService<Submission> service, ILogger<GenericController<Submission, CreateSubmissionDto, ReadSubmissionDto, UpdateSubmissionDto>> logger, IMapper mapper, AppDbContext context, EmailService emailService, OllamaClient ollamaClient, VectorService vectorService) : base(service, logger, mapper)
     {
         _context = context;
         _emailService = emailService;
         _ollamaClient = ollamaClient;
+        _vectorService = vectorService;
     }
 
     public override async Task<IActionResult> Add(CreateSubmissionDto createDto)
@@ -36,6 +41,13 @@ public class SubmissionsController : GenericController<Submission, CreateSubmiss
                 return BadRequest("Submission is deemed inadequate by AI. Please revise your submission.");
             }
             
+            // creating a new GUID so vector db and Postgres Ids are alike
+            var id = Guid.NewGuid();
+            
+            // embedding the short description into vector database
+            await _vectorService.IndexSubmissionAsync(id, shortDescription ?? "No short description generated");
+            
+            
             // overriding so when submission submitted its sent to Authority directly
             var to = await _context
                 .Authorities
@@ -48,6 +60,7 @@ public class SubmissionsController : GenericController<Submission, CreateSubmiss
                 $"{createDto.Description}\nLocation: {createDto.Location?.To2GisUrl() ?? "No location provided"}");
 
             var submission = _mapper.Map<Submission>(createDto);
+            submission.Id = id;
             submission.ShortDescription = shortDescription ?? "No short description generated";
             
             await _service.AddAsync(submission);

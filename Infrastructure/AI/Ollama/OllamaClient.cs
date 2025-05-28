@@ -2,7 +2,7 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Options;
 
-namespace Infrastructure.AI;
+namespace Infrastructure.AI.Ollama;
 
 public class OllamaClient
 {
@@ -36,7 +36,7 @@ public class OllamaClient
         
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        var response = await _httpClient.PostAsync($"{_ollamaSettings.Port}/api/generate", content);
+        var response = await _httpClient.PostAsync($"{_ollamaSettings.Host}{_ollamaSettings.Port}/api/generate", content);
         response.EnsureSuccessStatusCode();
 
         var responseString = await response.Content.ReadAsStringAsync();
@@ -44,5 +44,38 @@ public class OllamaClient
         using var doc = JsonDocument.Parse(responseString);
         
         return doc.RootElement.GetProperty("response").GetString();
+    }
+     
+    public async Task<float[]> GenerateEmbeddingAsync(string text)
+    {
+        var payload = new
+        {
+            model = _ollamaSettings.EmbeddingModel,
+            prompt = text,
+            stream = false
+        };
+        
+        var json = JsonSerializer.Serialize(payload);
+        
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        var response = await _httpClient.PostAsync($"{_ollamaSettings.Host}{_ollamaSettings.Port}/api/embed", content);
+        response.EnsureSuccessStatusCode();
+
+        var responseString = await response.Content.ReadAsStringAsync();
+        
+        using var doc = JsonDocument.Parse(responseString);
+        
+        var embeddingJson = doc.RootElement.GetProperty("embedding");
+
+        var vector = new float[embeddingJson.GetArrayLength()];
+        var index = 0;
+
+        foreach (var element in embeddingJson.EnumerateArray())
+        {
+            vector[index++] = element.GetSingle();
+        }
+
+        return vector;
     }
 }

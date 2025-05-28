@@ -9,7 +9,7 @@ using Presentation.DTOs.Authority;
 
 namespace Presentation.Controllers;
 
-[Authorize(Roles = "Admin,SuperAdmin")]
+// [Authorize(Roles = "Admin,SuperAdmin")]
 [ApiController]
 [Route("/api/[controller]")]
 public class AuthoritiesController : GenericController<Authority, CreateAuthorityDto, ReadAuthorityDto, UpdateAuthorityDto>
@@ -57,7 +57,7 @@ public class AuthoritiesController : GenericController<Authority, CreateAuthorit
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            _logger.LogError(e, "Error while fetching authority with id {Id}", id);
             throw;
         }
     }

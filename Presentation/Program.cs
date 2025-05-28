@@ -1,5 +1,6 @@
 using Application;
 using Infrastructure;
+using Infrastructure.AI.Ollama;
 using Infrastructure.Database;
 using Infrastructure.Database.Entities;
 using Infrastructure.Database.Identity;
@@ -39,6 +40,8 @@ builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
 
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
+builder.Services.AddHttpClient<OllamaClient>();
+
 
 var app = builder.Build();
 
@@ -60,6 +63,9 @@ if (app.Environment.IsDevelopment())
         options.RoutePrefix = string.Empty;
     });
 }
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 // for the time being
 app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());

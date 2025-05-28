@@ -72,6 +72,7 @@ public class AdminSubmissionsController : ControllerBase
         }
     }
     
+    [HttpPost("markasinprogress/{id}")]
     public async Task<IActionResult> MarkAsInProgress(Guid id, string answer = "")
     {
         try

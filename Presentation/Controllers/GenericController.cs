@@ -56,7 +56,7 @@ public class GenericController<T, TCreateDto, TReadDto, TUpdateDto> : Controller
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteById(Guid id)
+    public virtual async Task<IActionResult> DeleteById(Guid id)
     {
         try
         {
@@ -71,7 +71,7 @@ public class GenericController<T, TCreateDto, TReadDto, TUpdateDto> : Controller
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] TUpdateDto updateDto)
+    public virtual async Task<IActionResult> Update(Guid id, [FromBody] TUpdateDto updateDto)
     {
         try
         {
@@ -104,7 +104,7 @@ public class GenericController<T, TCreateDto, TReadDto, TUpdateDto> : Controller
     }
 
     [HttpPost("bulk")]
-    public async Task<IActionResult> AddRange([FromBody] IEnumerable<TCreateDto> createDtos)
+    public virtual async Task<IActionResult> AddRange([FromBody] IEnumerable<TCreateDto> createDtos)
     {
         try
         {
