@@ -1,6 +1,7 @@
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
+using Infrastructure.AI;
 using Infrastructure.Database;
 using Infrastructure.Email;
 using Microsoft.AspNetCore.Mvc;
@@ -15,16 +16,26 @@ public class SubmissionsController : GenericController<Submission, CreateSubmiss
 {
     private readonly AppDbContext _context;
     private readonly EmailService _emailService;
-    public SubmissionsController(IGenericService<Submission> service, ILogger<GenericController<Submission, CreateSubmissionDto, ReadSubmissionDto, UpdateSubmissionDto>> logger, IMapper mapper, AppDbContext context, EmailService emailService) : base(service, logger, mapper)
+    private readonly OllamaClient _ollamaClient;
+    public SubmissionsController(IGenericService<Submission> service, ILogger<GenericController<Submission, CreateSubmissionDto, ReadSubmissionDto, UpdateSubmissionDto>> logger, IMapper mapper, AppDbContext context, EmailService emailService, OllamaClient ollamaClient) : base(service, logger, mapper)
     {
         _context = context;
         _emailService = emailService;
+        _ollamaClient = ollamaClient;
     }
 
     public override async Task<IActionResult> Add(CreateSubmissionDto createDto)
     {
         try
         {
+            // making a short description using AI
+            var shortDescription = await _ollamaClient.MakeShortDescriptionAsync(createDto.Description);
+            
+            if(shortDescription?.Trim() == "Неадекватно.")
+            {
+                return BadRequest("Submission is deemed inadequate by AI. Please revise your submission.");
+            }
+            
             // overriding so when submission submitted its sent to Authority directly
             var to = await _context
                 .Authorities
@@ -36,7 +47,11 @@ public class SubmissionsController : GenericController<Submission, CreateSubmiss
                 $"{createDto.SubmissionType.ToString()}, {createDto.Title}",
                 $"{createDto.Description}\nLocation: {createDto.Location?.To2GisUrl() ?? "No location provided"}");
 
-            return await base.Add(createDto);
+            var submission = _mapper.Map<Submission>(createDto);
+            submission.ShortDescription = shortDescription ?? "No short description generated";
+            
+            await _service.AddAsync(submission);
+            return Ok();
         }
         catch (Exception e)
         {

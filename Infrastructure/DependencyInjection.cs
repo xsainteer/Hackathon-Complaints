@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Mail;
 using Application.Repositories;
+using Infrastructure.AI;
 using Infrastructure.Database.Repositories;
 using Infrastructure.Email;
 using Microsoft.Extensions.Configuration;
@@ -28,6 +29,10 @@ public static class DependencyInjection
             };
             return client;
         });
+        
+        services.Configure<OllamaSettings>(configuration.GetSection("OllamaSettings"));
+
+        services.AddScoped<OllamaClient>();
         
         return services;
     }

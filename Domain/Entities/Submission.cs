@@ -27,6 +27,10 @@ public class Submission : IHasId, IHasTitle
 
     public SubmissionStatus Status { get; set; } = SubmissionStatus.New;
     
+    public string ShortDescription { get; set; } = string.Empty;
+    
+    public bool IsAdequate { get; set; }
+    
     public string Answer { get; set; } = string.Empty;
     
     public GeoPoint? Location { get; set; }
