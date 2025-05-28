@@ -2,12 +2,14 @@ using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Infrastructure.Database;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Presentation.DTOs.Authority;
 
 namespace Presentation.Controllers;
 
+[Authorize(Roles = "Admin,SuperAdmin")]
 [ApiController]
 [Route("/api/[controller]")]
 public class AuthoritiesController : GenericController<Authority, CreateAuthorityDto, ReadAuthorityDto, UpdateAuthorityDto>
