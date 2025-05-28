@@ -35,7 +35,7 @@ public class GenericController<T, TCreateDto, TReadDto, TUpdateDto> : Controller
         catch (Exception e)
         {
             _logger.LogError(e, "Error while fetching {Type} entities", typeof(T).Name);
-            return StatusCode(500, new { message = "An error occurred while fetching data" });
+            throw;
         }
     }
 
@@ -66,7 +66,7 @@ public class GenericController<T, TCreateDto, TReadDto, TUpdateDto> : Controller
         catch (Exception e)
         {
             _logger.LogError(e, "Error while deleting {Type} entity with id {Id}", typeof(T).Name, id);
-            return StatusCode(500);
+            throw;
         }
     }
 
@@ -83,7 +83,7 @@ public class GenericController<T, TCreateDto, TReadDto, TUpdateDto> : Controller
         catch (Exception e)
         {
             _logger.LogError(e, "Error while updating {Type} entity with id {Id}", typeof(T).Name, id);
-            return StatusCode(500);
+            throw;
         }
     }
 
@@ -99,7 +99,7 @@ public class GenericController<T, TCreateDto, TReadDto, TUpdateDto> : Controller
         catch (Exception e)
         {
             _logger.LogError(e, "Error while adding new {Type} entity", typeof(T).Name);
-            return StatusCode(500);
+            throw;
         }
     }
 
@@ -116,7 +116,7 @@ public class GenericController<T, TCreateDto, TReadDto, TUpdateDto> : Controller
         catch (Exception e)
         {
             _logger.LogError(e, "Error while bulk-adding {Type} entities", typeof(T).Name);
-            return StatusCode(500);
+            throw;
         }
     }
 }
