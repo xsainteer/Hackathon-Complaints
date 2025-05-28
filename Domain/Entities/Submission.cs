@@ -16,7 +16,7 @@ public class Submission : IHasId, IHasTitle
     public Guid Id { get; set; }
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     
     public SubmissionType Type { get; set; }
     
@@ -58,6 +58,18 @@ public class GeoPoint
 
     public override string ToString() => $"({Latitude}, {Longitude})";
 
-    public string To2GisUrl(int zoom = 16) =>
-        $"https://2gis.kg/map/{Latitude.ToString(CultureInfo.InvariantCulture)},{Longitude.ToString(CultureInfo.InvariantCulture)}/{zoom}";
+    public string To2GisUrl(int zoom = 16)
+    {
+        try
+        {
+            return $"https://2gis.kg/map/{Latitude.ToString(CultureInfo.InvariantCulture)},{Longitude.ToString(CultureInfo.InvariantCulture)}/{zoom}";
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            Console.WriteLine("got this");
+            throw;
+        }
+        
+    }
 }

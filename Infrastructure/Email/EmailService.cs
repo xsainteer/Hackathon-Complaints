@@ -17,6 +17,10 @@ public class EmailService
 
     public async Task SendEmailAsync(string toEmail, string subject, string body)
     {
+        if (string.IsNullOrWhiteSpace(toEmail))
+        {
+            throw new ArgumentException("Recipient email address cannot be empty", nameof(toEmail));
+        }
         using var message = new MailMessage();
         message.From = new MailAddress(_smtpSettings.Username);
         message.To.Add(new MailAddress(toEmail));

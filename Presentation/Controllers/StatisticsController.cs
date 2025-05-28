@@ -113,13 +113,15 @@ public class StatisticsController : ControllerBase
                 queryVector.ToArray(),
                 limit: 1000,
                 filter: new Filter());
-            
+
             var passedResults = results
                 .Where(sp => sp.Score >= _qDrantSettings.SimilarityThreshold)
                 .ToList();
-            
-            var passedResultIds = passedResults.Select(r => Guid.Parse(r.Id.Uuid)).ToList();
-            
+
+            var scoreDict = passedResults.ToDictionary(r => Guid.Parse(r.Id.Uuid), r => r.Score);
+
+            var passedResultIds = scoreDict.Keys.ToList();
+
             var submissions = await _context.Submissions
                 .Where(s => passedResultIds.Contains(s.Id))
                 .AsNoTracking()
@@ -138,13 +140,41 @@ public class StatisticsController : ControllerBase
                     Location = s.Location
                 })
                 .ToListAsync();
+
+            var resultWithScores = submissions
+                .Select(s => new ScoredSubmissionDto
+                {
+                    Submission = s,
+                    Score = scoreDict[s.Id]
+                })
+                .OrderByDescending(s => s.Score)
+                .ToList();
             
-            return Ok(passedResults);
+            var resultDto = new ResultDto
+            {
+                Submissions = resultWithScores,
+                TotalCount = resultWithScores.Count
+            };
+
+            return Ok(resultDto);
         }
         catch (Exception e)
         {
             _logger.LogError(e, "An error occurred while searching submissions.");
             throw;
         }
+    }
+
+
+    public class ResultDto
+    {
+        public List<ScoredSubmissionDto> Submissions { get; set; }
+        public int TotalCount { get; set; }
+    }
+    
+    public class ScoredSubmissionDto
+    {
+        public ReadSubmissionDto Submission { get; set; }
+        public float Score { get; set; }
     }
 }

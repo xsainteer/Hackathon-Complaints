@@ -29,14 +29,16 @@ public class SubmissionsController : GenericController<Submission, CreateSubmiss
         _vectorService = vectorService;
     }
 
-    public override async Task<IActionResult> Add(CreateSubmissionDto createDto)
+    [HttpPost]
+    public override async Task<IActionResult> Add([FromBody]CreateSubmissionDto createDto)
     {
         try
         {
             // making a short description using AI
             var shortDescription = await _ollamaClient.MakeShortDescriptionAsync(createDto.Description);
             
-            if(shortDescription?.Trim() == "Неадекватно.")
+            if (!string.IsNullOrEmpty(shortDescription) &&
+                shortDescription.Contains("Неадекватно"))
             {
                 return BadRequest("Submission is deemed inadequate by AI. Please revise your submission.");
             }
@@ -45,14 +47,17 @@ public class SubmissionsController : GenericController<Submission, CreateSubmiss
             var id = Guid.NewGuid();
             
             // embedding the short description into vector database
-            await _vectorService.IndexSubmissionAsync(id, shortDescription ?? "No short description generated");
+            await _vectorService.IndexSubmissionAsync(id, createDto.Description);
             
             
             // overriding so when submission submitted its sent to Authority directly
-            var to = await _context
-                .Authorities
-                .FindAsync(createDto.AuthorityId)
-                ?? throw new Exception("Authority not found");
+            var to = await _context.Authorities.FindAsync(createDto.AuthorityId)
+                     ?? throw new Exception("Authority not found");
+
+            if (string.IsNullOrWhiteSpace(to.Email))
+            {
+                return BadRequest("У выбранного госоргана не указан email для отправки.");
+            }
             
             await _emailService.SendEmailAsync(
                 to.Email,

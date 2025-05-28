@@ -88,7 +88,7 @@ public class GenericController<T, TCreateDto, TReadDto, TUpdateDto> : Controller
     }
 
     [HttpPost]
-    public virtual async Task<IActionResult> Add([FromBody] TCreateDto createDto)
+    public virtual async Task<IActionResult> Add([FromBody]TCreateDto createDto)
     {
         try
         {
@@ -104,7 +104,7 @@ public class GenericController<T, TCreateDto, TReadDto, TUpdateDto> : Controller
     }
 
     [HttpPost("bulk")]
-    public virtual async Task<IActionResult> AddRange([FromBody] IEnumerable<TCreateDto> createDtos)
+    public virtual async Task<IActionResult> AddRange([FromBody]IEnumerable<TCreateDto> createDtos)
     {
         try
         {
