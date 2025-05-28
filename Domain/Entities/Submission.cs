@@ -1,3 +1,4 @@
+using System.Globalization;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -54,4 +55,7 @@ public class GeoPoint
     }
 
     public override string ToString() => $"({Latitude}, {Longitude})";
+
+    public string To2GisUrl(int zoom = 16) =>
+        $"https://2gis.kg/map/{Latitude.ToString(CultureInfo.InvariantCulture)},{Longitude.ToString(CultureInfo.InvariantCulture)}/{zoom}";
 }

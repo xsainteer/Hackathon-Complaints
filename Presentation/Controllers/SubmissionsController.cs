@@ -34,7 +34,7 @@ public class SubmissionsController : GenericController<Submission, CreateSubmiss
             await _emailService.SendEmailAsync(
                 to.Email,
                 $"{createDto.SubmissionType.ToString()}, {createDto.Title}",
-                createDto.Description);
+                $"{createDto.Description}\nLocation: {createDto.Location?.To2GisUrl() ?? "No location provided"}");
 
             return await base.Add(createDto);
         }

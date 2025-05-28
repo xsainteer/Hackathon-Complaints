@@ -9,6 +9,8 @@ public class Authority : IHasId, IHasTitle
     public string Title { get; set; } = string.Empty;
     public string Url { get; set; } = string.Empty;
     
+    public List<string> Branches { get; set; } = [];
+    
     [EmailAddress]
     public string Email { get; set; } = string.Empty;
     public List<Submission> Submissions { get; set; } = [];
