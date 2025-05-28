@@ -1,10 +1,12 @@
 using Domain.Entities;
+using Infrastructure.AI.Ollama;
 using Infrastructure.AI.Vectors;
 using Infrastructure.Database;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Presentation.DTOs.Submission;
 using Qdrant.Client;
 using Qdrant.Client.Grpc;
 
@@ -20,13 +22,15 @@ public class StatisticsController : ControllerBase
     private readonly QdrantClient _qdrantClient;
     private readonly VectorService _vectorService;
     private readonly QDrantSettings _qDrantSettings;
+    private readonly OllamaClient _ollamaClient;
 
-    public StatisticsController(QdrantClient qdrantClient, VectorService vectorService, ILogger<StatisticsController> logger, AppDbContext context, IOptions<QDrantSettings> qDrantSettings)
+    public StatisticsController(QdrantClient qdrantClient, VectorService vectorService, ILogger<StatisticsController> logger, AppDbContext context, IOptions<QDrantSettings> qDrantSettings, OllamaClient ollamaClient)
     {
         _qdrantClient = qdrantClient;
         _vectorService = vectorService;
         _logger = logger;
         _context = context;
+        _ollamaClient = ollamaClient;
         _qDrantSettings = qDrantSettings.Value;
     }
 
@@ -93,4 +97,53 @@ public class StatisticsController : ControllerBase
         }
     }
 
+
+    [HttpGet("semantic-search")]
+    public async Task<IActionResult> SearchSubmissions([FromQuery] string query = "")
+    {
+        if (string.IsNullOrWhiteSpace(query))
+            return BadRequest(new { message = "Query string cannot be empty" });
+
+        try
+        {
+            var queryVector = await _ollamaClient.GenerateEmbeddingAsync(query);
+
+            var results = await _qdrantClient.SearchAsync(
+                collectionName: _qDrantSettings.CollectionName,
+                queryVector.ToArray(),
+                limit: 1000,
+                filter: new Filter());
+            
+            var passedResults = results
+                .Where(sp => sp.Score >= _qDrantSettings.SimilarityThreshold)
+                .ToList();
+            
+            var passedResultIds = passedResults.Select(r => Guid.Parse(r.Id.Uuid)).ToList();
+            
+            var submissions = await _context.Submissions
+                .Where(s => passedResultIds.Contains(s.Id))
+                .Select(s => new ReadSubmissionDto
+                {
+                    Id = s.Id,
+                    Title = s.Title,
+                    Description = s.Description,
+                    ShortDescription = s.ShortDescription,
+                    CreatedAt = s.CreatedAt,
+                    CreatorId = s.CreatorId,
+                    AuthorityId = s.AuthorityId,
+                    SubmissionType = s.Type,
+                    Status = s.Status,
+                    Answer = s.Answer,
+                    Location = s.Location
+                })
+                .ToListAsync();
+            
+            return Ok(passedResults);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "An error occurred while searching submissions.");
+            throw;
+        }
+    }
 }

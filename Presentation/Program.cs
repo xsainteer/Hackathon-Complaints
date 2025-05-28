@@ -8,6 +8,7 @@ using Infrastructure.Email;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Presentation.Mappers;
 
@@ -40,7 +41,11 @@ builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
 
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
-builder.Services.AddHttpClient<OllamaClient>();
+builder.Services.AddHttpClient<OllamaClient>((provider, client) =>
+{
+    var settings = provider.GetRequiredService<IOptions<OllamaSettings>>().Value;
+    client.BaseAddress = new Uri($"http://{settings.Host}:{settings.Port}");
+});
 
 
 var app = builder.Build();

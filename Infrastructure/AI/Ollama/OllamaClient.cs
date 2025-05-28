@@ -36,7 +36,7 @@ public class OllamaClient
         
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        var response = await _httpClient.PostAsync($"{_ollamaSettings.Host}{_ollamaSettings.Port}/api/generate", content);
+        var response = await _httpClient.PostAsync("/api/generate", content);
         response.EnsureSuccessStatusCode();
 
         var responseString = await response.Content.ReadAsStringAsync();
@@ -59,7 +59,9 @@ public class OllamaClient
         
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        var response = await _httpClient.PostAsync($"{_ollamaSettings.Host}{_ollamaSettings.Port}/api/embed", content);
+        var response = await _httpClient.PostAsync(
+            "/api/embed",
+            content);
         response.EnsureSuccessStatusCode();
 
         var responseString = await response.Content.ReadAsStringAsync();

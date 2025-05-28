@@ -22,6 +22,8 @@ public class AuthoritiesController : GenericController<Authority, CreateAuthorit
 
     public override async Task<IActionResult> GetAll(int skip = 0, int count = 10, string query = "")
     {
+        if (skip < 0) skip = 0;
+        if (count <= 0) count = 10;
         try
         {
             var authoritiesWithSubs = await _context.Authorities

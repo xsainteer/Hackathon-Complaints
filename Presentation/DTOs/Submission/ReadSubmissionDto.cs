@@ -11,6 +11,9 @@ public class ReadSubmissionDto
     public DateTime CreatedAt { get; set; }
     public Guid CreatorId { get; set; }
     public Guid AuthorityId { get; set; }
+    
+    public string Answer { get; set; } = string.Empty;
+    
     public SubmissionType SubmissionType { get; set; }
     public SubmissionStatus Status { get; set; }
     public GeoPoint? Location { get; set; }

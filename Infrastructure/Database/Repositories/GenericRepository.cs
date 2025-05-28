@@ -24,7 +24,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class, IHasI
         return await _dbSet.FindAsync(id);
     }
 
-    public async Task<List<T>> GetAllAsync(int page = 1, int pageCount = 10, bool asNoTracking = false, string query = "")
+    public async Task<List<T>> GetAllAsync(int skip = 1, int count = 10, bool asNoTracking = false, string query = "")
     {
         _logger.LogInformation("Fetching all {Entity} records", typeof(T).Name);
         var queryable = asNoTracking ? _dbSet.AsNoTracking() : _dbSet;
@@ -35,8 +35,8 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class, IHasI
         }
         
         return await queryable
-            .Skip((page - 1) * pageCount)
-            .Take(pageCount)
+            .Skip(skip)
+            .Take(count)
             .ToListAsync();
     }
 

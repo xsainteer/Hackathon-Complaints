@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers;
 
-[Authorize(Roles = "Admin, SuperAdmin")]
+// [Authorize(Roles = "Admin, SuperAdmin")]
 [ApiController]
 [Route("api/admin/submissions")]
 public class AdminSubmissionsController : ControllerBase

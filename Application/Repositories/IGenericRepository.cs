@@ -6,7 +6,7 @@ namespace Application.Repositories;
 public interface IGenericRepository<T> where T : IHasTitle, IHasId
 {
     Task<T?> GetByIdAsync(Guid id);
-    Task<List<T>> GetAllAsync(int page = 1, int pageCount = 10, bool asNoTracking = false, string query = "");
+    Task<List<T>> GetAllAsync(int page = 1, int count = 10, bool asNoTracking = false, string query = "");
     Task AddAsync(T entity);
     Task AddRangeAsync(IEnumerable<T> entities);
     Task UpdateAsync(T entity);

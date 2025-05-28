@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers;
 
-[Authorize(Roles = "SuperAdmin")]
+// [Authorize(Roles = "SuperAdmin")]
 [ApiController]
 [Route("api/[controller]")]
 public class SuperAdminController : ControllerBase
