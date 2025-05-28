@@ -122,6 +122,7 @@ public class StatisticsController : ControllerBase
             
             var submissions = await _context.Submissions
                 .Where(s => passedResultIds.Contains(s.Id))
+                .AsNoTracking()
                 .Select(s => new ReadSubmissionDto
                 {
                     Id = s.Id,

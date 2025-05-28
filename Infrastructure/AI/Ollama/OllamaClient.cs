@@ -1,5 +1,7 @@
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Options;
 
 namespace Infrastructure.AI.Ollama;
@@ -51,7 +53,7 @@ public class OllamaClient
         var payload = new
         {
             model = _ollamaSettings.EmbeddingModel,
-            prompt = text,
+            input = text,
             stream = false
         };
         
@@ -59,25 +61,26 @@ public class OllamaClient
         
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        var response = await _httpClient.PostAsync(
+        using var response = await _httpClient.PostAsync(
             "/api/embed",
             content);
         response.EnsureSuccessStatusCode();
 
-        var responseString = await response.Content.ReadAsStringAsync();
+        var result = await response.Content.ReadFromJsonAsync<OllamaEmbeddingResponse>();
         
-        using var doc = JsonDocument.Parse(responseString);
-        
-        var embeddingJson = doc.RootElement.GetProperty("embedding");
-
-        var vector = new float[embeddingJson.GetArrayLength()];
-        var index = 0;
-
-        foreach (var element in embeddingJson.EnumerateArray())
+        if (result?.Embeddings == null || result.Embeddings.Length == 0 || result.Embeddings[0] == null || result.Embeddings[0].Length == 0)
         {
-            vector[index++] = element.GetSingle();
+            throw new Exception("Embedding response was null or empty");
         }
+        
+        return result.Embeddings[0];
+    }
+    
+    private class OllamaEmbeddingResponse
+    {
 
-        return vector;
+        [JsonPropertyName("embeddings")]
+        public float[][] Embeddings { get; set; } = [];
+
     }
 }
