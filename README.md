@@ -4,44 +4,45 @@
 
 ## 🚩 Problem
 
-### Citizens
-- Each government agency collects its own complaints (if any), forcing users to search and submit separately on different websites.
-- Many people are unaware they can submit complaints electronically.
+### For Citizens
+- Each government agency collects complaints independently, forcing people to search and submit feedback across separate systems.
+- Many citizens are unaware of the ability to submit complaints electronically.
 
-### Government Agencies
-- Repeated complaints about the same issue with no clustering or aggregation.
-- Manual and inefficient complaint analysis due to lack of built-in tools.
-- Incomplete or vague information submitted by citizens makes it difficult to resolve problems efficiently.
+### For Government Agencies
+- Repeated complaints are not grouped or analyzed semantically.
+- Manual complaint review is slow and ineffective.
+- Incomplete or vague submissions reduce response efficiency.
 
 ## ✅ Solution
 
-- Centralized web platform to unify feedback channels.
-- Unique QR code for each agency branch.
-- Built-in analytics dashboard.
-- Geolocation and demographic data collection.
-- AI-powered semantic complaint analysis using embeddings.
+- A unified web platform that centralizes feedback across all agencies.
+- Unique QR codes for each agency branch to simplify submission.
+- Built-in analytics dashboard for administrators.
+- Location and demographic data collection.
+- AI-powered semantic search and summarization using embeddings.
 
-## 🧠 Core Features
+## 🧠 Key Features
 
-- Complaint submission UI  
-- Admin response UI  
-- Semantic search UI  
-- Frequent issues analysis  
-- QR code generator for branches  
-- QR & branch analytics panel  
+- Complaint submission interface  
+- Admin panel for responding to complaints  
+- Semantic search through submitted complaints  
+- Automatic clustering of frequent complaint topics  
+- QR code generator for each agency branch  
+- Analytics panel tracking QR scans and engagement  
 
 ## 🛠️ Tech Stack
 
 - **ASP.NET Core** – Web API backend  
 - **PostgreSQL** – Relational database  
-- **Qdrant** – Vector search engine  
-- **React** – Frontend  
-- **Ollama** – LLM for semantic embeddings and summarization  
+- **Qdrant** – Vector search engine for semantic data  
+- **React** – Frontend UI  
+- **Ollama** – LLM for embeddings and summarization  
 
 ## 📅 Status
 
-MVP built during hackathon — ongoing improvements planned.
+MVP built during a university hackathon. Active development continues.
 
-[📎 Hackathon link (KSTU)]([https://www.knu.kg/ky/ru/archives/16336](https://kstu.kg/bokovoe-menju/ehndaument-fond-kgtu/novosti?tx_news_pi1%5Baction%5D=detail&tx_news_pi1%5Bcontroller%5D=News&tx_news_pi1%5Bnews%5D=5488&cHash=574622b21fd6150453823a5484cfe0b3))
+## 🔗 Links
 
-[📎Miro User+Admin pipelines]( https://miro.com/app/board/uXjVIvSgtJY=/?share_link_id=184250474826)
+- [📎 KSTU Hackathon page](https://kstu.kg/bokovoe-menju/ehndaument-fond-kgtu/novosti?tx_news_pi1%5Baction%5D=detail&tx_news_pi1%5Bcontroller%5D=News&tx_news_pi1%5Bnews%5D=5488&cHash=574622b21fd6150453823a5484cfe0b3)
+- [📎 Miro — User & Admin Journey](https://miro.com/app/board/uXjVIvSgtJY=/?share_link_id=184250474826)
