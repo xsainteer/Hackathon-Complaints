@@ -1,9 +1,11 @@
 using Application;
 using Infrastructure;
 using Infrastructure.AI.Ollama;
+using Infrastructure.AI.Vectors;
 using Infrastructure.Database;
 using Infrastructure.Database.Entities;
 using Infrastructure.Database.Identity;
+using Infrastructure.Database.Seeders;
 using Infrastructure.Email;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -73,8 +75,12 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // for the time being
-app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-
+app.UseCors(options => options
+    .WithOrigins("http://localhost:5173")
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .AllowCredentials()
+);
 app.MapControllers();
 
 app.MapIdentityApi<AppUser>();

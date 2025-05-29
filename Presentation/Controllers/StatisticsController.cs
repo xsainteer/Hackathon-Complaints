@@ -166,15 +166,15 @@ public class StatisticsController : ControllerBase
     }
 
 
-    public class ResultDto
+    private class ResultDto
     {
-        public List<ScoredSubmissionDto> Submissions { get; set; }
+        public List<ScoredSubmissionDto> Submissions { get; set; } = [];
         public int TotalCount { get; set; }
     }
     
     public class ScoredSubmissionDto
     {
-        public ReadSubmissionDto Submission { get; set; }
+        public ReadSubmissionDto Submission { get; set; } = null!;
         public float Score { get; set; }
     }
 }

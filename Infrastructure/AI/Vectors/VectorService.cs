@@ -49,13 +49,13 @@ public class VectorService
         }
     }
 
-    public async Task IndexSubmissionAsync(Guid submissionId, string shortDescription)
+    public async Task IndexSubmissionAsync(Guid submissionId, string description)
     {
         try
         {
             await EnsureCollectionExistsAsync();
             
-            var embedding = await _ollamaClient.GenerateEmbeddingAsync(shortDescription);
+            var embedding = await _ollamaClient.GenerateEmbeddingAsync(description);
             
             if (embedding == null || embedding.Length != _qDrantSettings.VectorSize)
             {
@@ -76,18 +76,10 @@ public class VectorService
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            _logger.LogError(e, "An error occurred while ensuring the collection exists.");
             throw;
         }
     }
-    
-    // public async Task<List<CommonProblemDto>> GetCommonProblemsAsync(int top = 10)
-    // {
-    //     var allPoints = await _qdrantClient.SearchAsync(
-    //         _qDrantSettings.CollectionName,
-    //         
-    //         );
-    // }
     
     public static float CosineSimilarity(IEnumerable<float> v1, IEnumerable<float> v2)
     {
@@ -105,28 +97,4 @@ public class VectorService
 
         return dot / ((float)Math.Sqrt(mag1) * (float)Math.Sqrt(mag2));
     }
-    
-    
-    // public async Task<List<RetrievedPoint>> GetAllPointsAsync()
-    // {
-    //     var allPoints = new List<RetrievedPoint>();
-    //     PointId? nextOffset = null;
-    //
-    //     do
-    //     {
-    //         var response = await _qdrantClient.ScrollAsync(
-    //             collectionName : _qDrantSettings.CollectionName,
-    //             limit : 100, // можно менять, максимум — зависит от настроек сервера
-    //             offset : nextOffset
-    //         );
-    //
-    //         allPoints.AddRange(response.Result);
-    //
-    //         offset = response.NextPageOffset?.ToString();
-    //
-    //     } while (offset != null);
-    //
-    //     return allPoints;
-    // }
-
 }

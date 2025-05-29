@@ -5,6 +5,7 @@ using Infrastructure.AI;
 using Infrastructure.AI.Ollama;
 using Infrastructure.AI.Vectors;
 using Infrastructure.Database.Repositories;
+using Infrastructure.Database.Seeders;
 using Infrastructure.Email;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -58,6 +59,8 @@ public static class DependencyInjection
         });
 
         services.AddScoped<VectorService>();
+
+        services.AddScoped<SubmissionsSeeder>();
         
         return services;
     }

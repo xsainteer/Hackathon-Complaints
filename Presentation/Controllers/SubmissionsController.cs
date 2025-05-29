@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
@@ -34,6 +35,7 @@ public class SubmissionsController : GenericController<Submission, CreateSubmiss
     {
         try
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             // making a short description using AI
             var shortDescription = await _ollamaClient.MakeShortDescriptionAsync(createDto.Description);
             
@@ -67,7 +69,8 @@ public class SubmissionsController : GenericController<Submission, CreateSubmiss
             var submission = _mapper.Map<Submission>(createDto);
             submission.Id = id;
             submission.ShortDescription = shortDescription ?? "No short description generated";
-            
+            if (userId != null) submission.CreatorId = Guid.Parse(userId);
+
             await _service.AddAsync(submission);
             return Ok();
         }
